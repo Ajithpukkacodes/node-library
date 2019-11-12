@@ -1,0 +1,22 @@
+extends ../../views/layout
+
+block content
+  div.container
+    h1=title
+
+    form.form-horizontal(method='POST' action='')
+      div.form-group
+        label.control-label.col-sm-2(for='username') User Name:
+        div.col-xs-3  
+          input#user_name.form-control(type='text' placeholder='user name (Christian)' name='username' )
+      .form-group
+        label.control-label.col-sm-2(for='password') password :
+        div.col-xs-3 
+          input#password.form-control(type='password' placeholder='pass' name='password')
+      .form-group
+        div.col-sm-offset-2.col-sm-10 
+          button.btn.btn-primary(type='submit') Submit
+    if errors 
+      ul
+        for error in errors
+          li!= error.msg

@@ -1,0 +1,22 @@
+extends ../../views/layout
+
+block content
+  h1= title
+  
+  p #[strong Author:]
+    a(href=author.url) #{author.name}
+  h4 books
+  
+    ul
+      each val in author_books
+        li
+          h5 #[strong Name:]
+            a(href=val.url) #{val.title}
+          p #[strong ISBN:] #{val.isbn}
+          p #[strong Summary:] #{val.summary}
+      else
+        li There are no books.
+  a(href=author.url + "/delete" method="post" confirm="check it?") Delete user
+  //- form(action=author.url, method="POST")
+  //-  input(type="hidden", name="_method", value="DELETE")
+  //-  button(type="submit" onclick="return confirm('Do you really want to submit the form?');") Delete

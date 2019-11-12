@@ -1,0 +1,15 @@
+extends ../../views/layout
+
+block content
+  h1= title
+  
+  ul
+    each author in author_list
+      li 
+        a(href=author.url) #{author.name} 
+        |  DOB: (#{author.dob_formatted})
+        if author.date_of_death != null
+          |   DOD: (#{author.dod_formatted})
+          | lifespan: (#{author.lifespan})
+    else
+      li There are no authors.

@@ -1,0 +1,12 @@
+extends ../../views/layout
+
+block content
+  h1= title
+  
+  h2 #{genre.name}:
+  ul
+    each book in genre_books
+      li
+        a(href=book.url) #{book.title}
+    else
+      li There are no books.
