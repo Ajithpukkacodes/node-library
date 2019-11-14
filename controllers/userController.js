@@ -92,8 +92,14 @@ exports.login_get = function (req, res, next) {
 };
 
 exports.login_post = function (req, res, next) {
-  passport.authenticate('local', { successRedirect: '/',
+  passport.authenticate('local', { successRedirect: '/catalog',
                                    failureRedirect: '/users/login',
                                    failureFlash: true })(req, res, next);
   // res.send('sdsadsdsad');
+};
+
+exports.logout = function (req,res,next) {
+  req.logout();
+  req.flash('success',"successful logout");
+  res.redirect('/users/login');
 };

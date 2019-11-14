@@ -10,8 +10,12 @@ const passport = require('passport');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');
+var compression = require('compression');
+var helmet = require('helmet');
 
 var app = express();
+
+app.use(helmet());
 
 //db connection
 var mongoose = require('mongoose');
@@ -30,28 +34,41 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// Passport Config
-require('./config/passport')(passport);
-// Passport Middleware
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cookieParser());
-app.use(session({ key: 'sid',secret: 'keyboard cat', resave: false,
+app.use(session({ key: 'sid',secret: 'keyboard cat', resave: true,
 saveUninitialized: true, cookie: { maxAge: 60000 }}));
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
+
+app.use(compression()); //Compress all routes
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+//set current user
+app.get('*', function(req, res, next){
+  res.locals.current_user = req.user || null;
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -68,5 +85,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;

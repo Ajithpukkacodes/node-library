@@ -12,6 +12,12 @@ html(lang='en')
     div(class='container-fluid')
       div(class='row')
         div(class='col-sm-2')
+          if current_user 
+            a(href='/users/logout') logout
+          else
+            |
+            a(href='/users/login') login
+            a(href='/users/sign_up') sign_up
           block sidebar
             ul(class='sidebar-nav')
               li 

@@ -3,3 +3,9 @@
     padding: 0;
     list-style: none;
 }
+
+.alert-error{
+  color: #a9442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}

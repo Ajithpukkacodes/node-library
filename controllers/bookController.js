@@ -9,7 +9,7 @@ const validator = require('express-validator');
 var async = require('async');
 
 exports.index = function(req, res) {
-
+    console.log(res.locals.user = req.user || null);
     async.parallel({
         book_count: function(callback) {
             Book.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
