@@ -13,6 +13,10 @@ router.post('/login', user_controller.login_post);
 
 router.get('/logout', user_controller.logout);
 
+router.get('/facebook_login', user_controller.facebook_login );
+
+router.get('/auth/facebook/callback', user_controller.facebook_callback);
+
 
 
 module.exports = router;

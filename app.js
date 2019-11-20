@@ -1,10 +1,12 @@
 var createError = require('http-errors');
 var express = require('express');
+const paginate = require('express-paginate');
 var path = require('path');
-var cookieParser = require('cookie-parser');
+// var cookieParser = require('cookie-parser');
 var session = require('express-session')
 var logger = require('morgan');
 var flash = require('connect-flash');
+var date = require('date-and-time');
 const passport = require('passport');
 
 var indexRouter = require('./routes/index');
@@ -25,7 +27,7 @@ var mongoose = require('mongoose');
 // var dev_db_url = 'mongodb+srv://cooluser:coolpassword@cluster0-mbdj7.mongodb.net/local_library?retryWrites=true'
 var dev_db_url = 'mongodb://127.0.0.1/lib_development';
 var mongoDB = process.env.MONGODB_URI || dev_db_url;
-mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Get the default connection
 var db = mongoose.connection;
@@ -42,9 +44,8 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(cookieParser());
-app.use(session({ key: 'sid',secret: 'keyboard cat', resave: true,
-saveUninitialized: true, cookie: { maxAge: 60000 }}));
+// app.use(cookieParser());
+app.use(session({ key: 'sid',secret: 'keyboard cat' }));
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
@@ -66,11 +67,11 @@ app.get('*', function(req, res, next){
   next();
 });
 
+app.use(paginate.middleware(10, 50));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);
-
-
 
 
 // catch 404 and forward to error handler

@@ -16,6 +16,7 @@ var AuthorSchema = new Schema(
 AuthorSchema
 .virtual('name')
 .get(function () {
+  console.log("sfsfcsf");
   return this.family_name + ' ' + this.first_name;
 });
 

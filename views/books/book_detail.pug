@@ -29,6 +29,10 @@ block content
          p #[strong Due back:] #{val.due_back}
         p #[strong Id:]&nbsp;
            a(href=val.url) #{val._id}
+           if val.status == 'Available'
+             form(method='POST' action=val.url + '/create')
+               button.btn.btn-primary(type='submit') Loan
+               //- a#employeeLink(href=val.url+'/create') delete book
 
       else
         p There are no copies of this book in the library.

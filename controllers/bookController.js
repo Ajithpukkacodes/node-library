@@ -3,7 +3,7 @@ var Author = require('../models/author');
 var Genre = require('../models/genre');
 var BookInstance = require('../models/bookinstance');
 const validator = require('express-validator');
-
+const paginate = require('express-paginate');
 
 
 var async = require('async');
@@ -12,30 +12,45 @@ exports.index = function(req, res) {
     console.log(res.locals.user = req.user || null);
     async.parallel({
         book_count: function(callback) {
-            Book.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
+            Book.count({}, callback); // Pass an empty object as match condition to find all documents of this collection
         },
         book_instance_count: function(callback) {
-            BookInstance.countDocuments({}, callback);
+            BookInstance.count({}, callback);
         },
         book_instance_available_count: function(callback) {
-            BookInstance.countDocuments({status:'Available'}, callback);
+            BookInstance.count({status:'Available'}, callback);
         },
         author_count: function(callback) {
-            Author.countDocuments({}, callback);
+            Author.count({}, callback);
         },
         genre_count: function(callback) {
-            Genre.countDocuments({}, callback);
-        }
+            Genre.count({}, callback);
+        },
+
     }, function(err, results) {
-        res.render('index', { title: 'Local Library Home', error: err, data: results });
+        res.render('index', { title: 'Local Library Home', action: req.url, error: err, data: results });
     });
 };
 
 // Display list of all books.
-exports.book_list = function(req, res) {
-    Book.find({}).populate('author').exec(function (err, list_books) {
-       res.render("books/book_list", {title: 'Book List', book_list: list_books});
-    });
+exports.book_list = async function (req, res, next) {
+   try {
+    var book_count = await Book.count({});
+    // Book.find({}).populate('author').exec(function (err, list_books) {
+    //    res.render("books/book_list", {title: 'Book List', action: req.url, book_list: list_books, book_count: book_count});
+    // });
+  var book_list = await Book.find({}).populate('author').limit(req.query.limit).skip(req.skip).exec();
+  const pageCount = Math.ceil(book_count / req.query.limit);
+  var currentPage = req.query.page;
+  res.render("books/book_list", {title: 'Book List', book_list: book_list, pageCount: pageCount,
+        book_count: book_count,
+        currentPage,
+        pages: paginate.getArrayPages(req)(2, pageCount, req.query.page)});
+    }
+    catch (err) {
+        next(err);
+      }
+
 };
 
 // Display detail page for a specific book.
@@ -54,7 +69,7 @@ exports.book_detail = function(req, res, next) {
          err.status = 404;
          return next(err);
        }
-       res.render('books/book_detail',{title: results.book.title, book: results.book, book_instance: results.book_instance});
+       res.render('books/book_detail',{title: results.book.title, action: req.url, book: results.book, book_instance: results.book_instance});
     });
 };
 
@@ -70,7 +85,7 @@ exports.book_create_get = function(req, res, next) {
     },
     function (err, results) {
       if (err) { return next(err); }
-        res.render('books/book_form', { title: 'Create Book', authors: results.authors, genres: results.genres });
+        res.render('books/book_form', { title: 'Create Book', action: req.url, authors: results.authors, genres: results.genres });
     });
 };
 
@@ -135,7 +150,7 @@ exports.book_create_post = [// Convert the genre to an array.
                         results.genres[i].checked='true';
                     }
                 }
-                res.render('books/book_form', { title: 'Create Book',authors:results.authors, genres:results.genres, book: book, errors: errors.array() });
+                res.render('books/book_form', { title: 'Create Book', action: req.url,authors:results.authors, genres:results.genres, book: book, errors: errors.array() });
             });
             return;
         }

@@ -1,0 +1,33 @@
+extends ../../views/layout
+
+block content
+  .col-lg-20
+    .main-card.mb-3.card
+      .card-body
+        h5.card-title= title
+        table.mb-0.table.table-hover
+          thead
+            tr
+              th #
+              th Book
+              th Author
+              th Loaned At
+              th Due Date
+              th Actions
+          tbody
+            //- - book_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+            each rental in book_rentals
+              tr
+                th(scope='row') #{rental._id}
+                td
+                  a(href=rental.book_instance.book.url) #{rental.book_instance.book.title} 
+                td
+                  p=rental.book_instance.book.author.name
+                td= rental.createdAt
+                td= rental.book_instance.due_back
+                td.actions
+                  //- a(href=book.url+'/delete') delete book
+                  //- a(href=book.url+'/update') Update Book
+            else
+              p There are no books.
+        include ../shared/_paginate

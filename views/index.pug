@@ -1,19 +1,49 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #[em LocalLibrary], a very basic Express website developed as a tutorial example on the Mozilla Developer Network.
-
-  h1 Dynamic content
-
-  if error
-    p Error getting dynamic content.
-  else
-    p The library has the following record counts:
-
-    ul
-      li #[strong Books:] !{data.book_count}
-      li #[strong Copies:] !{data.book_instance_count}
-      li #[strong Copies available:] !{data.book_instance_available_count} 
-      li #[strong Authors:] !{data.author_count}
-      li #[strong Genres:] !{data.genre_count}
+  .row
+    .col-md-6.col-xl-4
+      .card.mb-3.widget-content.bg-midnight-bloom
+        .widget-content-wrapper.text-white
+          .widget-content-left
+            .widget-heading Books
+            .widget-subheading Last year expenses
+          .widget-content-right
+            .widget-numbers.text-white
+              span #{data.book_count}
+    .col-md-6.col-xl-4
+      .card.mb-3.widget-content.bg-arielle-smile
+        .widget-content-wrapper.text-white
+          .widget-content-left
+            .widget-heading Copies
+            .widget-subheading Total Clients Profit
+          .widget-content-right
+            .widget-numbers.text-white
+              span #{data.book_instance_count}
+    .col-md-6.col-xl-4
+      .card.mb-3.widget-content.bg-arielle-smile
+        .widget-content-wrapper.text-white
+          .widget-content-left
+            .widget-heading Authors
+            .widget-subheading Total Clients Profit
+          .widget-content-right
+            .widget-numbers.text-white
+              span #{data.author_count}
+    .col-md-6.col-xl-4
+      .card.mb-3.widget-content.bg-grow-early
+        .widget-content-wrapper.text-white
+          .widget-content-left
+            .widget-heading Copies available
+            .widget-subheading People Interested
+          .widget-content-right
+            .widget-numbers.text-white
+              span !{data.book_instance_available_count}
+    .col-md-6.col-xl-4
+      .card.mb-3.widget-content.bg-grow-early
+        .widget-content-wrapper.text-white
+          .widget-content-left
+            .widget-heading Generes
+            .widget-subheading People Interested
+          .widget-content-right
+            .widget-numbers.text-white
+              span !{data.genre_count}

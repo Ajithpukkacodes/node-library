@@ -1,0 +1,15 @@
+if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
+  ul.pagination.pull-right
+    if paginate.hasPreviousPages
+      li.page-item
+        a.page-link(href=paginate.href(true), aria-label='Previous')
+          i.fa.fa-arrow-circle-left
+    if pages
+      each page in pages
+        li.page-item(class=(currentPage == page.number)? 'active' : '')
+          a.page-link(href=page.url)= page.number
+    if paginate.hasNextPages(pageCount)
+      li.page-item
+        a.page-link(href=paginate.href(), aria-label='Next')
+          i.fa.fa-arrow-circle-right
+          span.sr-only Next

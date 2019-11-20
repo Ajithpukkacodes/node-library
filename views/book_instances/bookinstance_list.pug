@@ -7,6 +7,7 @@ block content
     //- - book_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
     each instance in instance_list
       li 
+        = console.log(instance._id)
         a(href=instance.url) #{instance.book.title} : (#{instance.imprint})-
         if instance.status == 'Available'
           span.text-success !{instance.status}

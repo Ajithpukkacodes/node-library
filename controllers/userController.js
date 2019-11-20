@@ -47,23 +47,6 @@ validator.sanitizeBody('confirm-password').escape(),
        user_name: req.body.user_name,
        password: req.body.password
      });
-
-     // bcryptjs.genSalt(10,function (err, salt) {
-     //   bcryptjs.hash(user.password, salt ,function (err, hash) {
-     //      if (err) {return next(err); }
-     //      user.password = hash;
-     //      user.save(function (err) {
-     //        if (err) {
-     //          console.log("unsuccessfull");
-     //          return;
-     //         }
-     //         else {
-     //           req.flash("success", "user created successful");
-     //           res.redirect("/users");
-     //         }
-     //      });
-     //   });
-     // })
      bcrypt.genSalt(10, function(err, salt){
       bcrypt.hash(user.password, salt, function(err, hash){
         if(err){
@@ -97,6 +80,21 @@ exports.login_post = function (req, res, next) {
                                    failureFlash: true })(req, res, next);
   // res.send('sdsadsdsad');
 };
+
+exports.facebook_login = function (req, res, next) {
+  passport.authenticate('facebook')(req,res,next);
+};
+// app.get('/auth/facebook', passport.authenticate('facebook'));
+
+// Facebook will redirect the user to this URL after approval.  Finish the
+// authentication process by attempting to obtain an access token.  If
+// access was granted, the user will be logged in.  Otherwise,
+// authentication has failed.
+exports.facebook_callback = function (req,res, next) {
+  passport.authenticate('facebook', { successRedirect: '/catalog',
+                                        failureRedirect: '/users/login',failureFlash: true })(req, res, next);
+};
+
 
 exports.logout = function (req,res,next) {
   req.logout();
