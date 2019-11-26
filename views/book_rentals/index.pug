@@ -13,6 +13,7 @@ block content
               th Author
               th Loaned At
               th Due Date
+              th Returned At
               th Actions
           tbody
             //- - book_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
@@ -23,10 +24,13 @@ block content
                   a(href=rental.book_instance.book.url) #{rental.book_instance.book.title} 
                 td
                   p=rental.book_instance.book.author.name
-                td= rental.createdAt
-                td= rental.book_instance.due_back
+                td= moment(rental.createdAt).format('MMM Do YYYY, h:mm:ss a')
+                td= moment(rental.book_instance.due_back).format('MMM Do YYYY, h:mm:ss a')
+                td= moment(rental.returnedAt).format('MMM Do YYYY, h:mm:ss a')
                 td.actions
-                  //- a(href=book.url+'/delete') delete book
+                  if rental.status == "Loaned"
+                    form(method='POST' action=rental.url+'/return')
+                      button.btn.btn-primary(type='submit') Return book
                   //- a(href=book.url+'/update') Update Book
             else
               p There are no books.

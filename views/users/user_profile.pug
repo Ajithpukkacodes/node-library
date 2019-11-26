@@ -1,0 +1,8 @@
+extends ../../views/layout
+
+block content
+  h1= title
+  p #[strong Author:]
+    a(href=user.url) #{user.user_name}
+  p #[strong Email:] #{user.email}
+  img(src='/uploads/users/'+ user._id + '/' + 'thumb_' + user.avatar)

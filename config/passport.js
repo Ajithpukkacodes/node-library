@@ -39,9 +39,9 @@ var passport = require('passport')
     }));
 
     passport.use(new FacebookStrategy({
-    clientID: '431422094452174',
-    clientSecret: '6c521b4158aae732f7f4def14465d72f',
-    callbackURL: "http://localhost:8080/users/auth/facebook/callback"
+    clientID: process.env.FCLIENTID,
+    clientSecret: process.env.FCLIENTSECRET,
+    callbackURL: process.env.FCALLBACK
     },
     function(accessToken, refreshToken, profile, done) {
       User.findOne({email: profile.id}, function(err, user) {

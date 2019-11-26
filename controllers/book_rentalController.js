@@ -4,7 +4,7 @@ var Genre = require('../models/genre');
 var BookInstance = require('../models/bookinstance');
 var User = require('../models/user');
 var BookRental = require('../models/book_rental');
-var date = require('date-and-time');
+var moment = require('moment');
 
 const paginate = require('express-paginate');
 var async = require('async');
@@ -21,7 +21,7 @@ try{
     rent_book.save(function (err) {
       if (err) { return next(err); }
       current_date = new Date();
-      book_instance.due_back = date.addDays(current_date, 5);
+      book_instance.due_back = moment(current_date).add(5, 'days');
       book_instance.status = "Loaned";
       console.log(book_instance);
       book_instance.save(function (err) {
@@ -55,5 +55,33 @@ exports.index = async function (req, res, next) {
           pages: paginate.getArrayPages(req)(2, pageCount, req.query.page)});
   } catch (err) {
       next(err);
+  }
+};
+
+exports.return_book = async function (req, res, next) {
+  try {
+    var rental = await BookRental.findOne( { $and: [ { user: { $eq: req.user } }, { _id: { $eq: req.params.id } } ] } ).populate({
+      path: 'book_instance', populate: { path: 'book', populate:{ path: 'author'} }})
+    .populate('user');
+    var book_instance = await BookInstance.findById(rental.book_instance._id);
+    if (rental!= null){
+      rental.status = "Returned";
+      rental.returnedAt = new Date();
+      rental.save(function (err) {
+        if (err) { return next(err); }
+         book_instance.status = "Available";
+         book_instance.save(function (err) {
+           if (err) { return next(err);}
+           req.flash('success', "book Returned");
+           res.redirect('/catalog/book_rentals');
+         });
+      });
+      }
+      else {
+        req.flash('danger', "book not found");
+        res.redirect('/catalog/bookrentals');
+      }
+  } catch (err) {
+    next(err);
   }
 };

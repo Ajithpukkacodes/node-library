@@ -8,6 +8,12 @@ var BookRentalSchema = new Schema ({
   },
   book_instance: {
     type: Schema.Types.ObjectId, ref: 'BookInstance', required: true
+  },
+  status: {
+    type: String, required: true, enum: ['Loaned', 'Returned'], default: 'Loaned'
+  },
+  returnedAt: {
+    type: Date
   }
 },{
   timestamps: true

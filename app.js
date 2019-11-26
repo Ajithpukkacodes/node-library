@@ -1,3 +1,4 @@
+require('dotenv').config()
 var createError = require('http-errors');
 var express = require('express');
 const paginate = require('express-paginate');
@@ -6,7 +7,6 @@ var path = require('path');
 var session = require('express-session')
 var logger = require('morgan');
 var flash = require('connect-flash');
-var date = require('date-and-time');
 const passport = require('passport');
 
 var indexRouter = require('./routes/index');
@@ -16,6 +16,7 @@ var compression = require('compression');
 var helmet = require('helmet');
 
 var app = express();
+app.locals.moment = require('moment');
 
 app.use(helmet());
 

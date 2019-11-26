@@ -78,10 +78,12 @@ html(lang='en')
                     if current_user
                       .btn-group
                         a.p-0.btn(data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                          img.rounded-circle(width='42', src='assets/images/avatars/1.jpg', alt=current_user.user_name)
+                          img.rounded-circle(width='42', src='/uploads/users/'+ current_user._id + '/' + current_user.avatar, alt=current_user.user_name)
                           i.fa.fa-angle-down.ml-2.opacity-8
                         .dropdown-menu.dropdown-menu-right(tabindex='-1', role='menu', aria-hidden='true')
                           //- button.dropdown-item(type='button', tabindex='0') logout
+                          a.dropdown-item(href='/users/'+ current_user._id) My profile
+                          a.dropdown-item(href='/users/'+ current_user._id + '/edit') Edit profile
                           a.dropdown-item(href='/users/logout') logout
                           
                       //-     button.dropdown-item(type='button', tabindex='0') Settings
@@ -184,7 +186,7 @@ html(lang='en')
                 //- li
                 //-   a(href='#')
                 //-     i.metismenu-icon.pe-7s-car
-                //-     |                                         Components
+                //-     |                                         
                 //-     i.metismenu-state-icon.pe-7s-angle-down.caret-left
                 //-   ul
                 //-     li

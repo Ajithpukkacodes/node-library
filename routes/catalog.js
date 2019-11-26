@@ -123,4 +123,7 @@ router.post('/bookinstance/:id/create', authentication.authenticate, book_rental
 //GET rented list for current users
 router.get('/book_rentals', authentication.authenticate, book_rental_controller.index);
 
+//POST renting a book instance
+router.post('/bookrentals/:id/return', authentication.authenticate, book_rental_controller.return_book);
+
 module.exports = router;

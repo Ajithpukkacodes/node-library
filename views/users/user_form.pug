@@ -1,0 +1,32 @@
+extends ../../views/layout
+
+block content
+  .row
+    .col-md-12
+      .main-card.mb-3.card
+        .card-body
+          h5.card-title= title
+          form(method='POST' action='' enctype="multipart/form-data")
+            if errors
+              ul.text-danger(type="square")
+                for error in errors
+                  li
+                    i.text-danger!= error.msg
+            .position-relative.form-group
+              label(for='user_name') User name:
+              input#user_name.form-control(type='text', placeholder='ajith' name='user_name' required='true' value=(undefined===user ? '' : user.user_name) )
+            .position-relative.form-group
+              label(for='email') Email
+              input#email.form-control(name='email', placeholder='with a placeholder', type='email' required='true' value=(undefined===user ? '' : user.email))
+            .position-relative.form-group
+              label(for='password') New Password
+              input#password.form-control(name='password', placeholder='*******', type='password')
+            .position-relative.form-group  
+              label(for='confirm-password') confirm password :
+              input#confirm-password.form-control(type='password' placeholder='******' name='confirm-password')
+            .position-relative.form-group
+              label(for='avatar') Avatar
+              input#avatar.form-control-file(name='avatar', type='file')
+              small.form-text.text-muted
+                | This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.
+            button.mt-1.btn.btn-primary Submit
