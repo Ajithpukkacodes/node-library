@@ -16,6 +16,10 @@ router.get('/forgot', user_controller.forgot_password_get);
 
 router.post('/forgot', user_controller.forgot_password_post);
 
+router.get('/reset/:token', user_controller.reset_password_get );
+
+router.post('/reset/:token', user_controller.reset_password_post );
+
 router.get('/logout', user_controller.logout);
 
 router.get('/facebook_login', user_controller.facebook_login );

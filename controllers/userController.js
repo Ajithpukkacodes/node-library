@@ -275,7 +275,7 @@ exports.forgot_password_post = async function (req, res, next) {
         subject: 'Node.js Password Reset',
         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+          'http://' + req.headers.host + '/users/reset/' + token + '\n\n' +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       mail.smtpTransport.sendMail(mailOptions);
@@ -284,4 +284,38 @@ exports.forgot_password_post = async function (req, res, next) {
   } catch (err) {
     next (err);
   }
+};
+
+exports.reset_password_get = async function (req, res, next) {
+try {
+   var user = await  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
+   if (!user){
+     req.flash('error', 'Password reset token is invalid or has expired.');
+     res.redirect('/users/forgot');
+   }
+   res.render('users/reset', {
+       user: req.user
+     });
+} catch (err) {
+  next (err);
+}
+};
+
+exports.reset_password_post = async function (req, res, next) {
+try {
+  var user = await  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
+  if (!user){
+    req.flash('error', 'Password reset token is invalid or has expired.');
+    res.redirect('/users/forgot');
+  }
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  await user.save();
+  req.flash('success', "Password changed successfully")
+  res.redirect('/users/login')
+} catch (err) {
+  next (err);
+}
 };
