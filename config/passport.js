@@ -52,8 +52,9 @@ var passport = require('passport')
         }
         else {
           console.log(profile);
+          email = profile.email== "" ? "" : profile.email
           var newUser = new User({
-            email: profile.id,
+            email: email ,
             facebook_uid: profile.id,
             user_name: profile.displayName
           });

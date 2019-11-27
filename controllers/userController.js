@@ -77,6 +77,20 @@ exports.sign_up_post = [
   // Indicates the success of this synchronous custom validator
   return true;
 }),
+validator.body('email').custom((value, { req }) => {
+  return User.findOne({email: value}).then(user => {
+     if (user) {
+       return Promise.reject('E-mail already in use');
+     }
+   });
+}),
+validator.body('user_name').custom((value, { req }) => {
+  return User.findOne({user_name: value}).then(user => {
+     if (user) {
+       return Promise.reject('user name already in use');
+     }
+   });
+}),
 validator.sanitizeBody('confirm-password').escape(),
   // res.render('users/sign_up_form',{ title: 'sign up'});
  (req, res, next) => {
@@ -92,12 +106,12 @@ validator.sanitizeBody('confirm-password').escape(),
        user_name: req.body.user_name,
        password: req.body.password
      });
-     bcrypt.genSalt(10, function(err, salt){
-      bcrypt.hash(user.password, salt, function(err, hash){
-        if(err){
-          console.log(err);
-        }
-        user.password = hash;
+     // bcrypt.genSalt(10, function(err, salt){
+     //  bcrypt.hash(user.password, salt, function(err, hash){
+        // if(err){
+        //   console.log(err);
+        // }
+        // user.password = hash;
         user.save(function(err){
           if(err){
             console.log(err);
@@ -107,8 +121,8 @@ validator.sanitizeBody('confirm-password').escape(),
             res.redirect('login');
           }
         });
-      });
-    });
+      // });
+    // });
    }
  }
 ];
@@ -178,6 +192,20 @@ exports.user_update_post = [
     }
     // Indicates the success of this synchronous custom validator
     return true;
+  }),
+  validator.body('email').custom((value, { req }) => {
+    return User.findOne({email: value}).then(user => {
+       if (user) {
+         return Promise.reject('E-mail already in use');
+       }
+     });
+  }),
+  validator.body('user_name').custom((value, { req }) => {
+    return User.findOne({user_name: value}).then(user => {
+       if (user) {
+         return Promise.reject('user name already in use');
+       }
+     });
   }),
   async (req, res, next) => {
     try{

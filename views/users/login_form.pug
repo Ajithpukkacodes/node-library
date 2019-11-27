@@ -1,24 +1,20 @@
 extends ../../views/layout
 
 block content
-  div.container
-    h1=title
-
-    form.form-horizontal(method='POST' action='')
-      div.form-group
-        label.control-label.col-sm-2(for='username') User Name:
-        div.col-xs-3  
-          input#user_name.form-control(type='text' placeholder='user name (Christian)' name='username' )
-      .form-group
-        label.control-label.col-sm-2(for='password') password :
-        div.col-xs-3 
-          input#password.form-control(type='password' placeholder='pass' name='password')
-      .form-group
-        div.col-sm-offset-2.col-sm-10 
-          button.btn.btn-primary(type='submit') Submit
-          
-      a(href="/users/facebook_login") Login with Facebook
-    if errors 
-      ul
-        for error in errors
-          li!= error.msg
+  .row
+    .col-md-12
+      .main-card.mb-3.card
+        .card-body
+          h5.card-title= title
+          form.form-horizontal(method='POST' action='')
+            include ../shared/_errors
+            .position-relative.form-group
+              label(for='username') User Name:  
+              input#user_name.form-control(type='text' placeholder='user name (Christian)' name='username' )
+            .position-relative.form-group
+              label(for='password') password :
+              input#password.form-control(type='password' placeholder='pass' name='password')
+            .position-relative.form-group
+              button.btn.btn-primary(type='submit') Submit
+              a.btn.btn-link(href='/users/forgot') Forgot Password?
+            a(href="/users/facebook_login") Login with Facebook

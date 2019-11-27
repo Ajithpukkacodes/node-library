@@ -7,11 +7,7 @@ block content
         .card-body
           h5.card-title= title
           form(method='POST' action='' enctype="multipart/form-data")
-            if errors
-              ul.text-danger(type="square")
-                for error in errors
-                  li
-                    i.text-danger!= error.msg
+            include ../shared/_errors
             .position-relative.form-group
               label(for='user_name') User name:
               input#user_name.form-control(type='text', placeholder='ajith' name='user_name' required='true' value=(undefined===user ? '' : user.user_name) )

@@ -1,0 +1,5 @@
+if errors
+  ul.text-danger(type="square")
+    for error in errors
+      li
+        i.text-danger!= error.msg
